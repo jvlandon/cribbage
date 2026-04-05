@@ -70,20 +70,31 @@ class Hand:
         all_cards = sorted(self.cards + [common], key=lambda card: card.pos)
         all_runs = []
         current_run = []
+        card_track = {}
+        multiplier = 1
         for i in range(len(all_cards)):
+            if not(all_cards[i].pos in card_track):
+                card_track[all_cards[i].pos] = 0
+            card_track[all_cards[i].pos] += 1
             if not current_run or all_cards[i].pos == current_run[-1].pos + 1:
                 current_run.append(all_cards[i])
+            elif all_cards[i].pos == current_run[-1].pos:
+                continue
             else:
                 if len(current_run) >= 3:
                     all_runs.append(current_run)
         if len(current_run) >=3:
             all_runs.append(current_run)
+        for pos in card_track:
+            multiplier *= card_track[pos]
         if not all_runs:
             return 0
         elif len(all_runs[0]) == 5:
             return 5
         elif len(all_runs[0]) == 4:
-            return len(all_runs) * 4
+            return len(all_runs) * 4 * multiplier
+        else:
+            return len(all_runs) * 3 * multiplier
 
 
 

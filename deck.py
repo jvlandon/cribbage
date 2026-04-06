@@ -10,7 +10,7 @@ class Deck:
         for suit in SUITS:
             for rank in RANKS:
                 self.deck.append(Card((rank, suit)))
-                random.shuffle(self.deck)
+        random.shuffle(self.deck)
 
     def deal(self, players):
         for player in players:
@@ -33,17 +33,18 @@ class Card:
 
 class Hand:
 
-    def __init__(self, cards):
+    def __init__(self, cards, is_crib=False):
         self.cards = cards
+        self.is_crib = is_crib
 
-    def discard(self, hand_pos):
+    def discard(self, hand_pos): #likely to change once dealing is implemented
         card_index = hand_pos - 1
         if len(self.cards) == 6:
             if card_index < 0 or card_index > 5:
-                raise Exception("please choose a number 1-6")
+                raise ValueError("please choose a number 1-6")
         elif len(self.cards) == 5:
             if card_index < 0 or card_index > 4:
-                raise Exception("please choose a number 1-5")
+                raise ValueError("please choose a number 1-5")
         self.cards.pop(card_index)
     
     def find_fifteens(self, common):
@@ -67,34 +68,30 @@ class Hand:
         return total
 
     def find_runs(self, common):
-        all_cards = sorted(self.cards + [common], key=lambda card: card.pos)
-        all_runs = []
-        current_run = []
+        all_cards = sorted(self.cards + [common], key=lambda card_pos: card_pos.pos)
+        run = []
         card_track = {}
         multiplier = 1
         for i in range(len(all_cards)):
             if not(all_cards[i].pos in card_track):
                 card_track[all_cards[i].pos] = 0
             card_track[all_cards[i].pos] += 1
-            if not current_run or all_cards[i].pos == current_run[-1].pos + 1:
-                current_run.append(all_cards[i])
-            elif all_cards[i].pos == current_run[-1].pos:
+            if not run or all_cards[i].pos == run[-1].pos + 1:
+                run.append(all_cards[i])
+            elif all_cards[i].pos == run[-1].pos:
                 continue
             else:
-                if len(current_run) >= 3:
-                    all_runs.append(current_run)
-        if len(current_run) >=3:
-            all_runs.append(current_run)
-        for pos in card_track:
-            multiplier *= card_track[pos]
-        if not all_runs:
-            return 0
-        elif len(all_runs[0]) == 5:
-            return 5
-        elif len(all_runs[0]) == 4:
-            return len(all_runs) * 4 * multiplier
+                if len(run) >= 3:
+                    break
+                else:
+                    run = []
+        if len(run) >=3:
+            for card in run:
+                multiplier *= card_track[card.pos]
         else:
-            return len(all_runs) * 3 * multiplier
+            return 0
+
+        return len(run) * multiplier
 
 
 
@@ -121,13 +118,16 @@ class Hand:
                 return 1
         return 0
     
-    def score_hand(self):
+    def score_hand(self, common):
         total = 0
-        total += self.find_fifteens
-        total += self.find_pairs
-        total += self.find_runs
-        total += self.find_flush
-        total += self.nobs
+        total += self.find_fifteens(common)
+        total += self.find_pairs(common)
+        total += self.find_runs(common)
+        if self.is_crib:
+            total += self.find_flush_crib(common)
+        else:
+            total += self.find_flush(common)
+        total += self.nobs(common)
         return total
 
 

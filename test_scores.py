@@ -53,9 +53,13 @@ class MyTestCase(unittest.TestCase):
     def test_find_runs(self):
         self.assertEqual(Hand([ace_s, two_c, three_h, four_h]).find_runs(five_h), 5) #five in a row
         self.assertEqual(Hand([five_h, five_s, six_s, seven_d]).find_runs(four_h), 8) #two runs of four
-        self.assertEqual(Hand([jack_h, nine_c, jack_c, nine_h]).find_runs(ten_s), 12) #four runs of three
+        self.assertEqual(Hand([jack_h, nine_c, jack_c, nine_h]).find_runs(ten_c), 12) #four runs of three
         self.assertEqual(Hand([ace_s, king_s, ten_h, seven_d]).find_runs(five_s), 0) #no runs
 
+    def test_score_hands(self):
+        self.assertEqual(Hand([jack_h, nine_c, jack_c, nine_h]).score_hand(ten_c), 17) #4x3, two pair, nobs
+        self.assertEqual(Hand([five_h, ten_h, three_h, four_h]).score_hand(Card(("K", "HEARTS"))), 12) #5-card flush, 2x15s, run of 3
+        self.assertEqual(Hand([ace_s, king_s, ten_h, seven_d]).score_hand(three_h), 0) #skunk hand
 
 if __name__ == '__main__':
     unittest.main()

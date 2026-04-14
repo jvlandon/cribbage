@@ -19,7 +19,7 @@ def pegging_phase(player1, player2):
                 count += move.value
                 card_stack.append(move)
                 pegging_score(count, card_stack, players[turn % 2])
-                if check_for_go(players, count) == True:
+                if check_for_go(players, count):
                     current_player.score += 1
                     turn += 1
                     break
@@ -39,17 +39,26 @@ def get_valid_moves(hand, count):
 
 def pegging_score(count, card_stack, player):
     pair_count = 1
-    run_count = 1
     if count == 15:
         player.score += 2
+        print("Scores 2 points for making 15!")
     for i in range(len(card_stack)):
         if card_stack[-i].rank == card_stack[-i-1].rank:
             pair_count += 1
     if pair_count > 1:
         player.score += 2 * pair_count
+        print(f"Scores {2 * pair_count} points for making {pair_count} pair(s)!")
     if len(card_stack) >= 3:
-        tail = sorted(card_stack[-3:], key=lambda card: card.pos)
-        if
+        for i in range(3, len(card_stack)):
+            tail = sorted(card_stack[-i:], key=lambda card_pos: card_pos.pos)
+            run_track = []
+            for j in range(0, len(tail)):
+                if tail[j].pos == tail[j+1].pos + 1 or not run_track:
+                    run_track.append(tail[j])
+        if len(run_track) >= 3:
+            player.score += len(run_track)
+            print(f"Scores {len(run_track)} points for making a run!")
+    return
 
 
 

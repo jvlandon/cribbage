@@ -22,14 +22,14 @@ class Deck:
 
 class Card:
 
-    def __init__(self, code):
-        self.rank = code[0]
-        self.suit = code[1]
+    def __init__(self, rank, suit):
+        self.rank = rank
+        self.suit = suit
         self.value = RANK_VALUES[self.rank]
         self.pos = RANK_NUMS[self.rank]
 
     def __repr__(self):
-        return f"{self.rank} of {self.suit}"
+        return f"{self.rank}{self.suit}"
 
 class Hand:
 

@@ -42,22 +42,33 @@ def pegging_score(count, card_stack, player):
     if count == 15:
         player.score += 2
         print("Scores 2 points for making 15!")
-    for i in range(len(card_stack)):
-        if card_stack[-i].rank == card_stack[-i-1].rank:
+    if count == 31:
+        player.score += 2
+        print("Scores 2 points for making 31!")
+    for i in range(len(card_stack)-1, 0, -1):
+        if card_stack[i].rank == card_stack[i-1].rank:
             pair_count += 1
+        else:
+            break
     if pair_count > 1:
-        player.score += 2 * pair_count
-        print(f"Scores {2 * pair_count} points for making {pair_count} pair(s)!")
+        if pair_count == 4:
+            player.score += 12
+            print("Scores 12 points for making 4 of a kind!")
+        elif pair_count == 3:
+            player.score += 6
+            print("Scores 6 points for making 3 of a kind!")
+        else:
+            player.score += 2
+            print("Scores 2 points for making a pair!")
     if len(card_stack) >= 3:
-        for i in range(3, len(card_stack)):
-            tail = sorted(card_stack[-i:], key=lambda card_pos: card_pos.pos)
-            run_track = []
-            for j in range(0, len(tail)):
-                if tail[j].pos == tail[j+1].pos + 1 or not run_track:
-                    run_track.append(tail[j])
-        if len(run_track) >= 3:
-            player.score += len(run_track)
-            print(f"Scores {len(run_track)} points for making a run!")
+        for i in range(len(card_stack), 2, -1):
+            tail = [card.pos for card in card_stack[-i:]]
+            if len(set(tail)) != len(tail):
+                continue
+            if max(tail) - min(tail) == len(tail) - 1:
+                player.score += len(tail)
+                print(f"Scores {len(tail)} points for making a run!")
+                break
     return
 
 

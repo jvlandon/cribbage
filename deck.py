@@ -9,13 +9,13 @@ class Deck:
     def shuffle(self):
         for suit in SUITS:
             for rank in RANKS:
-                self.deck.append(Card((rank, suit)))
+                self.deck.append(Card(rank, suit))
         random.shuffle(self.deck)
 
     def deal(self, players):
         for player in players:
-            while len(player.hand) < 6:
-                player.hand.append(self.deck.pop())
+            while len(player.hand.cards) < 6:
+                player.hand.cards.append(self.deck.pop())
 
     def cut_deck(self):
         self.deck.pop(random.randrange(0, len(self.deck)))
@@ -37,16 +37,6 @@ class Hand:
         self.cards = cards
         self.is_crib = is_crib
 
-    def discard(self, hand_pos): #likely to change once dealing is implemented
-        card_index = hand_pos - 1
-        if len(self.cards) == 6:
-            if card_index < 0 or card_index > 5:
-                raise ValueError("please choose a number 1-6")
-        elif len(self.cards) == 5:
-            if card_index < 0 or card_index > 4:
-                raise ValueError("please choose a number 1-5")
-        self.cards.pop(card_index)
-    
     def find_fifteens(self, common):
         fifteen_list = []
         total = 0

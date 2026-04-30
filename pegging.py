@@ -4,38 +4,54 @@ from players import Player
 
 def pegging_phase(player1, player2):
     turn = 0
-    while player1.hand or player2.hand:
+    used_cards = []
+    last_player = None
+    players = [player1, player2]
+    while get_valid_moves(player1, used_cards) and get_valid_moves(player2, used_cards):
         count = 0
         card_stack = []
-        players = [player1, player2]
         while count <= 31:
             current_player = players[turn % 2]
-            valid_moves = get_valid_moves(current_player.hand, count)
+            valid_moves = get_valid_moves(current_player, used_cards, count)
             if valid_moves:
                 print(valid_moves)
                 choice = int(input("choose a card from your hand: "))
                 move = valid_moves[choice-1]
-                current_player.hand.pop(move)
                 count += move.value
+                print(f"Count is at {count}")
+                used_cards.append(move)
                 card_stack.append(move)
                 pegging_score(count, card_stack, players[turn % 2])
-                if check_for_go(players, count):
-                    current_player.score += 1
+                last_player = current_player
+                turn += 1
+                continue
+            else:
+                if count == 31:
+                    break
+                elif check_for_go(players, used_cards, count):
+                    print(f"Scores 1 point for making a go!")
+                    last_player.score += 1
                     turn += 1
                     break
                 else:
+                    print("No moves available, but your opponent can play a card!")
+                    turn += 1
                     continue
-            else:
-                print("No moves available, but your opponent can play a card!")
-            turn += 1
+    print(used_cards)
+    print("Pegging phase complete! moving to scoring phase...")
 
-
-def get_valid_moves(hand, count):
+def get_valid_moves(player, used_cards, count=0):
     valid_moves = []
-    for card in hand:
-        if card.value + count <= 31:
+    for card in player.hand.cards:
+        if card.value + count <= 31 and card not in used_cards:
             valid_moves.append(card)
     return valid_moves
+
+def check_for_go(players, used_cards, count):
+    for player in players:
+        if get_valid_moves(player, used_cards, count):
+            return False
+    return True
 
 def pegging_score(count, card_stack, player):
     pair_count = 1
@@ -75,11 +91,6 @@ def pegging_score(count, card_stack, player):
 
 
 
-def check_for_go(players, count):
-    for player in players:
-        for card in player.hand:
-            if card.value + count <= 31:
-                return False
-    return True
+
 
 

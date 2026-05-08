@@ -2,10 +2,14 @@ from deck import Hand, Deck, Card
 
 class Player:
 
-    def __init__(self, dealer=False):
+    def __init__(self, name, dealer=False):
         self.dealer = dealer
+        self.name = name
         self.hand = Hand([], False)
         self.score = 0
+
+    def __repr__(self):
+        print(self.name)
 
     def discard(self, hand_pos):
         card_index = hand_pos - 1

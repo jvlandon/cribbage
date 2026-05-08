@@ -18,7 +18,7 @@ class Deck:
                 player.hand.cards.append(self.deck.pop())
 
     def cut_deck(self):
-        self.deck.pop(random.randrange(0, len(self.deck)))
+        return self.deck.pop(random.randrange(0, len(self.deck)))
 
 class Card:
 
@@ -47,6 +47,7 @@ class Hand:
             for combo in combinations(fifteen_list, i):
                 if sum(combo) == 15:
                     total += 2
+                    print(f"Scores 2 points for making 15: {combo}!")
         return total
 
     def find_pairs(self, common):
@@ -55,6 +56,7 @@ class Hand:
         for combo in combinations(all_cards, 2):
             if combo[0].rank == combo[1].rank:
                 total += 2
+                print(f"scores 2 points for making a pair: {combo}!")
         return total
 
     def find_runs(self, common):
@@ -80,7 +82,7 @@ class Hand:
                 multiplier *= card_track[card.pos]
         else:
             return 0
-
+        print(f"Scores a run of {len(run)} cards: {run}")
         return len(run) * multiplier
 
 
@@ -91,7 +93,9 @@ class Hand:
         suits_in_hand = [card.suit for card in self.cards]
         if len(set(suits_in_hand)) == 1:
             if common.suit == suits_in_hand[0]:
+                print("Scores a scores a five-card flush!")
                 return 5
+            print("Scores a four-card flush!")
             return 4
         return 0
 
@@ -99,12 +103,14 @@ class Hand:
         all_cards = self.cards + [common]
         all_suits = [card.suit for card in all_cards]
         if len(set(all_suits)) == 1:
+            print("Scores a scores a five-card flush!")
             return 5
         return 0
     
     def nobs(self, common):
         for card in self.cards:
             if card.rank == "J" and card.suit == common.suit:
+                print("Scores 1 for Nobs!")
                 return 1
         return 0
     

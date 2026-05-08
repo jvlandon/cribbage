@@ -15,8 +15,7 @@ def pegging_phase(player1, player2):
             valid_moves = get_valid_moves(current_player, used_cards, count)
             if valid_moves:
                 print(valid_moves)
-                choice = int(input("choose a card from your hand: "))
-                move = valid_moves[choice-1]
+                move = player_move(valid_moves)
                 count += move.value
                 print(f"Count is at {count}")
                 used_cards.append(move)
@@ -37,8 +36,20 @@ def pegging_phase(player1, player2):
                     print("No moves available, but your opponent can play a card!")
                     turn += 1
                     continue
-    print(used_cards)
     print("Pegging phase complete! moving to scoring phase...")
+
+def player_move(valid_moves):
+    while True:
+        choice = int(input("choose a card from your hand: "))
+        try:
+            move = valid_moves[choice - 1]
+            print(f"Played card: {move}")
+            return move
+
+        except IndexError:
+            print("Invalid card choice")
+        except ValueError:
+            print("Invalid card choice")
 
 def get_valid_moves(player, used_cards, count=0):
     valid_moves = []

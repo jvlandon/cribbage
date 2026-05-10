@@ -76,7 +76,7 @@ class Hand:
                 if len(run) >= 3:
                     break
                 else:
-                    run = []
+                    run = [all_cards[i]]
         if len(run) >=3:
             for card in run:
                 multiplier *= card_track[card.pos]

@@ -7,7 +7,7 @@ def pegging_phase(player1, player2):
     used_cards = []
     last_player = None
     players = [player1, player2]
-    while get_valid_moves(player1, used_cards) and get_valid_moves(player2, used_cards):
+    while True:
         count = 0
         card_stack = []
         while count <= 31:
@@ -36,6 +36,8 @@ def pegging_phase(player1, player2):
                     print("No moves available, but your opponent can play a card!")
                     turn += 1
                     continue
+        if not get_valid_moves(player1, used_cards) and not get_valid_moves(player2, used_cards):
+            break
     print("Pegging phase complete! moving to scoring phase...")
 
 def player_move(valid_moves):

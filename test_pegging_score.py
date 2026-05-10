@@ -4,12 +4,13 @@ from pegging import pegging_score
 from players import Player
 from deck import Card
 
-player1 = Player()
-player2 = Player()
-player3 = Player()
-player4 = Player()
-player5 = Player()
-player6 = Player()
+player1 = Player("p1")
+player2 = Player("p2")
+player3 = Player("p3")
+player4 = Player("p4")
+player5 = Player("p5")
+player6 = Player("p6")
+
 
 class MyTestCase(unittest.TestCase):
     def test_pegging_scores(self):

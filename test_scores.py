@@ -2,26 +2,26 @@ import unittest
 from card_values import *
 from deck import *
 
-ace_s = Card(("A", "♠"))
-two_c = Card(("2", "♣"))
-three_h = Card(("3", "♥"))
-four_h = Card(("4", "♥"))
-five_h = Card(("5", "♥"))
-five_s = Card(("5", "♠"))
-six_s = Card(("6", "♠"))
-seven_d = Card(("7", "♦"))
-eight_d = Card(("8", "♦"))
-eight_c = Card(("8", "♣"))
-nine_c = Card(("9", "♣"))
-nine_h = Card(("9", "♥"))
-ten_h = Card(("10", "♥"))
-ten_s = Card(("10", "♠"))
-ten_c = Card(("10", "♣"))
-jack_c = Card(("J", "♣"))
-jack_h = Card(("J", "♥"))
-jack_s = Card(("J", "♠"))
-jack_d = Card(("J", "♦"))
-king_s = Card(("K", "♠"))
+ace_s = Card("A", "♠")
+two_c = Card("2", "♣")
+three_h = Card("3", "♥")
+four_h = Card("4", "♥")
+five_h = Card("5", "♥")
+five_s = Card("5", "♠")
+six_s = Card("6", "♠")
+seven_d = Card("7", "♦")
+eight_d = Card("8", "♦")
+eight_c = Card("8", "♣")
+nine_c = Card("9", "♣")
+nine_h = Card("9", "♥")
+ten_h = Card("10", "♥")
+ten_s = Card("10", "♠")
+ten_c = Card("10", "♣")
+jack_c = Card("J", "♣")
+jack_h = Card("J", "♥")
+jack_s = Card("J", "♠")
+jack_d = Card("J", "♦")
+king_s = Card("K", "♠")
 
 hand1 = Hand([five_h, ten_c , seven_d , five_s])
 hand2 = Hand([nine_c, ten_h, six_s, eight_d])
@@ -43,8 +43,8 @@ class MyTestCase(unittest.TestCase):
     def test_find_flush(self):
 
         self.assertEqual(Hand([five_h, ten_h, three_h, four_h]).find_flush(ace_s), 4)
-        self.assertEqual(Hand([five_h, ten_h, three_h, four_h]).find_flush(Card(("K", "♥"))), 5)
-        self.assertEqual(Hand([five_h, ten_h, three_h, ace_s]).find_flush(Card(("K", "♥"))), 0)
+        self.assertEqual(Hand([five_h, ten_h, three_h, four_h]).find_flush(Card("K", "♥")), 5)
+        self.assertEqual(Hand([five_h, ten_h, three_h, ace_s]).find_flush(Card("K", "♥")), 0)
 
     def test_find_pairs(self):
         self.assertEqual(Hand([five_h, ten_c, five_s, ace_s]).find_pairs(ten_h), 4) #two pairs
@@ -55,10 +55,12 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(Hand([five_h, five_s, six_s, seven_d]).find_runs(four_h), 8) #two runs of four
         self.assertEqual(Hand([jack_h, nine_c, jack_c, nine_h]).find_runs(ten_c), 12) #four runs of three
         self.assertEqual(Hand([ace_s, king_s, ten_h, seven_d]).find_runs(five_s), 0) #no runs
+        self.assertEqual(Hand([three_h, five_s, six_s, seven_d]).find_runs(eight_d), 4)
+        self.assertEqual(Hand([two_c, seven_d, ace_s, nine_c]).find_runs(eight_d), 3)
 
     def test_score_hands(self):
         self.assertEqual(Hand([jack_h, nine_c, jack_c, nine_h]).score_hand(ten_c), 17) #4x3, two pair, nobs
-        self.assertEqual(Hand([five_h, ten_h, three_h, four_h]).score_hand(Card(("K", "♥"))), 12) #5-card flush, 2x15s, run of 3
+        self.assertEqual(Hand([five_h, ten_h, three_h, four_h]).score_hand(Card("K", "♥")), 12) #5-card flush, 2x15s, run of 3
         self.assertEqual(Hand([ace_s, king_s, ten_h, seven_d]).score_hand(three_h), 0) #skunk hand
 
 if __name__ == '__main__':

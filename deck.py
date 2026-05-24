@@ -37,29 +37,34 @@ class Hand:
         self.cards = cards
         self.is_crib = is_crib
 
-    def find_fifteens(self, common):
+    def __repr__(self):
+        return f"{self.cards}"
+
+    def find_fifteens(self, common, verbose = True):
         fifteen_list = []
         total = 0
         for card in self.cards:
-            fifteen_list.append(card.value)
-        fifteen_list.append(common.value)
+            fifteen_list.append(card)
+        fifteen_list.append(common)
         for i in range(2, len(fifteen_list)+1):
             for combo in combinations(fifteen_list, i):
-                if sum(combo) == 15:
+                if sum(card.value for card in combo) == 15:
                     total += 2
-                    print(f"Scores 2 points for making 15: {combo}!")
+                    if verbose:
+                        print(f"Scores 2 points for making 15: {combo}!")
         return total
 
-    def find_pairs(self, common):
+    def find_pairs(self, common, verbose = True):
         total = 0
         all_cards = self.cards + [common]
         for combo in combinations(all_cards, 2):
             if combo[0].rank == combo[1].rank:
                 total += 2
-                print(f"scores 2 points for making a pair: {combo}!")
+                if verbose:
+                    print(f"Scores 2 points for making a pair: {combo}!")
         return total
 
-    def find_runs(self, common):
+    def find_runs(self, common, verbose = True):
         all_cards = sorted(self.cards + [common], key=lambda card_pos: card_pos.pos)
         run = []
         card_track = {}
@@ -82,20 +87,23 @@ class Hand:
                 multiplier *= card_track[card.pos]
         else:
             return 0
-        print(f"Scores a run of {len(run)} cards: {run}")
+        if verbose:
+            print(f"Scores {multiplier} run(s) of {len(run)} cards: {run}!")
         return len(run) * multiplier
 
 
 
 
 
-    def find_flush(self, common):
+    def find_flush(self, common, verbose = True):
         suits_in_hand = [card.suit for card in self.cards]
         if len(set(suits_in_hand)) == 1:
             if common.suit == suits_in_hand[0]:
-                print("Scores a scores a five-card flush!")
+                if verbose:
+                    print("Scores a five-card flush!")
                 return 5
-            print("Scores a four-card flush!")
+            if verbose:
+                print("Scores a four-card flush!")
             return 4
         return 0
 
@@ -103,14 +111,15 @@ class Hand:
         all_cards = self.cards + [common]
         all_suits = [card.suit for card in all_cards]
         if len(set(all_suits)) == 1:
-            print("Scores a scores a five-card flush!")
+            print("Scores a five-card flush!")
             return 5
         return 0
     
-    def nobs(self, common):
+    def nobs(self, common, verbose = True):
         for card in self.cards:
             if card.rank == "J" and card.suit == common.suit:
-                print("Scores 1 for Nobs!")
+                if verbose:
+                    print("Scores 1 point for Nobs!")
                 return 1
         return 0
     
@@ -124,6 +133,18 @@ class Hand:
         else:
             total += self.find_flush(common)
         total += self.nobs(common)
+        return total
+
+    def score_hand_silent(self, common):
+        total = 0
+        total += self.find_fifteens(common, False)
+        total += self.find_pairs(common, False)
+        total += self.find_runs(common, False)
+        if self.is_crib:
+            total += self.find_flush_crib(common)
+        else:
+            total += self.find_flush(common, False)
+        total += self.nobs(common, False)
         return total
 
 

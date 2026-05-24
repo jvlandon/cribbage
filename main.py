@@ -2,9 +2,10 @@ from pegging import pegging_phase
 from players import Player
 from deck import Deck, Hand, Card
 from discard import discard_to_crib
+from cpu_behavior import *
 
 def main():
-    players = [Player("Player 1"), Player("Player 2")]
+    players = [Player("Player 1", False), Player("CPU", True)]
     player1, player2 = players
     deck = Deck()
     turn = 0
@@ -20,13 +21,14 @@ def main():
         crib = Hand([], True)
         deck.shuffle()
         deck.deal(players)
-        discard_to_crib(player1,player2, crib)
+        cpu_choose_discard(player2, crib)
+        discard_to_crib([player1], crib)
         common = deck.cut_deck()
         print(f"common card: {common}")
         if common.rank == "J":
             dealer.score += 2
             print(f"Nibs! Dealer scores 2 points!")
-        pegging_phase(player1, player2)
+        pegging_phase(player1, player2, common)
         input("Press Enter to continue...")
         for player in players:
             if not player.dealer:

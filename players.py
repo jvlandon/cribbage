@@ -2,10 +2,11 @@ from deck import Hand, Deck, Card
 
 class Player:
 
-    def __init__(self, name, dealer=False):
+    def __init__(self, name, cpu, dealer=False):
         self.dealer = dealer
         self.name = name
         self.hand = Hand([], False)
+        self.cpu = cpu
         self.score = 0
 
     def __repr__(self):

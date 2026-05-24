@@ -1,13 +1,19 @@
-def discard_to_crib(player1, player2, crib):
-    while len(player1.hand.cards) > 4:
-        print(player1.hand.cards)
-        player_choice = int(input("Player 1, Please choose a card: "))
-        card_choice = player1.discard(player_choice)
-        if card_choice:
-            crib.cards.append(card_choice)
-    while len(player2.hand.cards) > 4:
-        print(player2.hand.cards)
-        player_choice = int(input("Player 2, Please choose a card: "))
-        card_choice = player2.discard(player_choice)
-        if card_choice:
-            crib.cards.append(card_choice)
+def discard_to_crib(players, crib):
+    for player in players:
+        while len(player.hand.cards) > 4:
+            print(player.hand.cards)
+            player_choice = input(f"{player.name}, Please choose a card: ")
+            if not player_choice:
+                print("Invalid card choice")
+                continue
+            try:
+                player_choice = int(player_choice)
+            except ValueError:
+                print("Invalid card choice")
+                continue
+            if player_choice < 1 or player_choice > len(player.hand.cards):
+                print("Invalid card choice")
+                continue
+            card_choice = player.discard(player_choice)
+            if card_choice:
+                crib.cards.append(card_choice)

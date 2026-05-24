@@ -1,8 +1,9 @@
 from deck import Deck, Hand, Card
 from card_values import *
 from players import Player
+from cpu_behavior import *
 
-def pegging_phase(player1, player2):
+def pegging_phase(player1, player2, common):
     turn = 0
     used_cards = []
     last_player = None
@@ -14,8 +15,12 @@ def pegging_phase(player1, player2):
             current_player = players[turn % 2]
             valid_moves = get_valid_moves(current_player, used_cards, count)
             if valid_moves:
-                print(valid_moves)
-                move = player_move(valid_moves)
+                if current_player.cpu:
+                    move = cpu_choose_play(valid_moves, count, card_stack, common)
+                    print(f"{current_player.name} plays {move}")
+                else:
+                    print(valid_moves)
+                    move = player_move(valid_moves)
                 count += move.value
                 print(f"Count is at {count}")
                 used_cards.append(move)
